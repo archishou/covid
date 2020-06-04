@@ -37,8 +37,6 @@ num_models = len(parm_combos)
 for index in range(num_models):
     dict = {}
     build_vals = list(parm_combos[index])
-    j = 0
-    for i in tunable_param_keys:
-        dict[i] = build_vals[j]
-        j = j + 1
+    for parm_num, param_name in enumerate(tunable_param_keys, start=0):
+        dict[param_name] = build_vals[parm_num]
     print(dict)
