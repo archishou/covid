@@ -1,4 +1,4 @@
-
+import itertools
 data_set = "/Users/Archish/Documents/CodeProjects/Python/IPF/datafiles/all_data"
 
 param_matrix = {
@@ -29,11 +29,16 @@ param_matrix = {
     'test_size':[0.2]
 }
 
-num_models = 1
+tunable_param_keys = list(param_matrix.keys())
+vals = list(param_matrix.values())
+parm_combos = list(itertools.product(*vals))
+num_models = len(parm_combos)
 
 for index in range(num_models):
-    tunable_params = list(param_matrix.keys())
-    for params in tunable_params:
-        num_models = num_models * len(param_matrix[params])
-
-    print(num_models)
+    dict = {}
+    build_vals = list(parm_combos[index])
+    j = 0
+    for i in tunable_param_keys:
+        dict[i] = build_vals[j]
+        j = j + 1
+    print(dict)
