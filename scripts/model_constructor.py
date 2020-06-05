@@ -1,7 +1,6 @@
 from sklearn.model_selection import train_test_split
 import csv
 from keras.callbacks import ModelCheckpoint
-import os
 import utils
 import matplotlib.pyplot as plt
 import pandas as pd

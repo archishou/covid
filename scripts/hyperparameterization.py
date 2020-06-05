@@ -33,7 +33,7 @@ param_matrix = {
     'dropout_3':[0.2],
     'optimizer':['adam'],
     'batch_size':[256],
-    'epochs':[72],
+    'epochs':[100],
     'test_size':[0.2]
 }
 
