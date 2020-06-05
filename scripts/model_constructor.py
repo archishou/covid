@@ -7,9 +7,9 @@ import pandas as pd
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
 from keras.layers import Conv2D, MaxPooling2D, GlobalAveragePooling2D
-data_set = "/Users/Archish/Documents/CodeProjects/Python/ipf-new/raw_data"
+data_set = '/Volumes/ArchishmaanHD1/data/raw_data/Respiratory_Sound_Database/audio_and_txt_files/'
 num_rows = 40
-num_columns = 174
+num_columns = utils.max_pad_len
 num_channels = 1
 
 def build_model(x, yy, params, model_path):

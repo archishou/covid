@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 import utils
 import os
-data_set = "/Users/Archish/Documents/CodeProjects/Python/ipf-new/raw_data"
+data_set = '/Volumes/ArchishmaanHD1/data/raw_data/Respiratory_Sound_Database/audio_and_txt_files/'
 
 
 param_matrix = {

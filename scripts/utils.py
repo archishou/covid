@@ -1,6 +1,7 @@
 import librosa
 import os
 import numpy as np
+max_pad_len = 4000
 def load_audio(file_name):
     try:
         audio, sample_rate = librosa.load(file_name, res_type='kaiser_fast')
@@ -9,20 +10,19 @@ def load_audio(file_name):
         print("Error encountered while parsing file: ", file_name)
 
 def extract_features(audio, sample_rate):
-    max_pad_len = 174
     mfccs = librosa.feature.mfcc(y=audio, sr=sample_rate, n_mfcc=40)
+    print(mfccs.shape[1])
     pad_width = max_pad_len - mfccs.shape[1]
     mfccs = np.pad(mfccs, pad_width=((0, 0), (0, pad_width)), mode='constant')
 
     return mfccs
 
 def class_name(file):
-    if file.startswith("ipf"):
-        return "ipf"
-    if file.startswith("healthy"):
-        return "healthy"
-    if file.startswith("copd"):
-        return "copd"
+    file_str = str(file)
+    if file_str.find("COPD") > 0:
+        return "COPD"
+    else:
+        return "NONE"
 
 def append_features(features, label, *augmented_data):
     for d in augmented_data:
