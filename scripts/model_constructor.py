@@ -1,24 +1,21 @@
-from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
-from keras.utils import to_categorical
-import pandas as pd
-import numpy as np
-from scripts import utils
+import csv
+from keras.callbacks import ModelCheckpoint
 import os
-import librosa
+import utils
+import matplotlib.pyplot as plt
+import pandas as pd
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
 from keras.layers import Conv2D, MaxPooling2D, GlobalAveragePooling2D
 data_set = "/Users/Archish/Documents/CodeProjects/Python/ipf-new/raw_data"
-
 num_rows = 40
 num_columns = 174
 num_channels = 1
 
-def build_model(params):
+def build_model(x, yy, params, model_path):
     # next we can build the model exactly like we would normally do it
-    create_model_folder(params=params)
-    x_train, x_val, y_train, y_val = pre_process(params['test_size'])
+    x_train, x_val, y_train, y_val = train_test_split(x, yy, test_size=params['test_size'], random_state=42)
 
     x_train = x_train.reshape(x_train.shape[0], num_rows, num_columns, num_channels)
     x_val = x_val.reshape(x_val.shape[0], num_rows, num_columns, num_channels)
@@ -47,41 +44,55 @@ def build_model(params):
     model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer=params['optimizer'])
 
     model.summary()
+    saved_models = model_path + 'saved_models/'
+    utils.create_dir(path=saved_models)
+    filepath = saved_models + "weights-{epoch:02d}-{val_accuracy:.2f}.hdf5"
+    print(filepath)
+    checkpoint = ModelCheckpoint(filepath, monitor='val_accuracy', verbose=1, mode='max')
 
     history = model.fit(x_train, y_train,
                         validation_data=[x_val, y_val],
                         batch_size=params['batch_size'],
                         epochs=params['epochs'],
-                        verbose=0)
+                        verbose=0, callbacks=[checkpoint])
 
-    # finally we have to make sure that history object and model are returned
-    return history, model
+    hist_df = pd.DataFrame(history.history)
 
-def pre_process(test_size):
-    features = []
-    for file in os.listdir(data_set):
-        if file.endswith(".wav"):
-            class_label = utils.class_name(file)
-            data_file = os.path.join(data_set, file)
-            audio, sample_rate = utils.load_audio(data_file)
-            raw_data = utils.extract_features(audio, sample_rate)
-            features = utils.append_features(features, class_label, raw_data)
+    with open(model_path + 'history.json', mode='w+') as f:
+        hist_df.to_json(f)
 
-    featuresdf = pd.DataFrame(features, columns=['feature', 'class_label'])
-    x = np.array(featuresdf.feature.tolist())
-    y = np.array(featuresdf.class_label.tolist())
-    le = LabelEncoder()
-    yy = to_categorical(le.fit_transform(y))
-    x_train, x_test, y_train, y_test = train_test_split(x, yy, test_size=test_size, random_state=42)
-    return x_train, x_test, y_train, y_test
+    save_figures(model_path=model_path, hist=history.history)
 
-def create_model_folder(params):
+def create(params, model_num, x, yy):
     # define the name of the directory to be created
-    path = "/Users/Archish/Documents/CodeProjects/Python/ipf-new/models"
+    model_id = "model_" + str(model_num) + '/'
+    model_path = "/Users/Archish/Documents/CodeProjects/Python/ipf-new/models/" + model_id
+    utils.create_dir(path=model_path)
 
-    try:
-        os.mkdir(path)
-    except OSError:
-        print("Creation of the directory %s failed" % path)
-    else:
-        print("Successfully created the directory %s " % path)
+    with open(model_path + 'params.csv', 'w') as csv_file:
+        writer = csv.writer(csv_file)
+        for key, value in params.items():
+            writer.writerow([key, value])
+
+    build_model(params=params, x=x, yy=yy, model_path=model_path)
+
+def save_figures(model_path, hist):
+    figure_path = model_path + 'figures/'
+    utils.create_dir(path=figure_path)
+    plt.clf()
+    plt.plot(hist['accuracy'])
+    plt.plot(hist['val_accuracy'])
+    plt.title('model accuracy')
+    plt.ylabel('accuracy')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'validation'], loc='upper left')
+    plt.savefig(figure_path + 'accuracy.png')
+    # "Loss"
+    plt.clf()
+    plt.plot(hist['loss'])
+    plt.plot(hist['val_loss'])
+    plt.title('model loss')
+    plt.ylabel('loss')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'validation'], loc='upper left')
+    plt.savefig(figure_path + 'loss.png')

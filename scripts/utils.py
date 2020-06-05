@@ -1,3 +1,6 @@
+import librosa
+import os
+import numpy as np
 def load_audio(file_name):
     try:
         audio, sample_rate = librosa.load(file_name, res_type='kaiser_fast')
@@ -25,3 +28,12 @@ def append_features(features, label, *augmented_data):
     for d in augmented_data:
         features.append([d, label])
     return features
+
+
+def create_dir(path):
+    try:
+        os.mkdir(path)
+    except OSError:
+        print("Creation of the directory %s failed" % path)
+    else:
+        print("Successfully created the directory %s " % path)

@@ -1,5 +1,13 @@
 import itertools
-data_set = "/Users/Archish/Documents/CodeProjects/Python/IPF/datafiles/all_data"
+import model_constructor
+from sklearn.preprocessing import LabelEncoder
+from keras.utils import to_categorical
+import pandas as pd
+import numpy as np
+import utils
+import os
+data_set = "/Users/Archish/Documents/CodeProjects/Python/ipf-new/raw_data"
+
 
 param_matrix = {
     'filter_0':[16, 32],
@@ -29,14 +37,34 @@ param_matrix = {
     'test_size':[0.2]
 }
 
-tunable_param_keys = list(param_matrix.keys())
-vals = list(param_matrix.values())
-parm_combos = list(itertools.product(*vals))
-num_models = len(parm_combos)
+def load_data():
+    features = []
+    for file in os.listdir(data_set):
+        if file.endswith(".wav"):
+            class_label = utils.class_name(file)
+            data_file = os.path.join(data_set, file)
+            audio, sample_rate = utils.load_audio(data_file)
+            raw_data = utils.extract_features(audio, sample_rate)
+            features = utils.append_features(features, class_label, raw_data)
 
-for index in range(num_models):
-    dict = {}
-    build_vals = list(parm_combos[index])
-    for parm_num, param_name in enumerate(tunable_param_keys, start=0):
-        dict[param_name] = build_vals[parm_num]
-    print(dict)
+    featuresdf = pd.DataFrame(features, columns=['feature', 'class_label'])
+    x = np.array(featuresdf.feature.tolist())
+    y = np.array(featuresdf.class_label.tolist())
+    le = LabelEncoder()
+    yy = to_categorical(le.fit_transform(y))
+    return x, yy
+
+
+if __name__ == '__main__':
+    x, yy = load_data()
+    tunable_param_keys = list(param_matrix.keys())
+    vals = list(param_matrix.values())
+    parm_combos = list(itertools.product(*vals))
+    num_models = len(parm_combos)
+    for index in range(num_models):
+        dict = {}
+        build_vals = list(parm_combos[index])
+        for parm_num, param_name in enumerate(tunable_param_keys, start=0):
+            dict[param_name] = build_vals[parm_num]
+        model_constructor.create(params=dict, model_num=index, x=x, yy=yy)
+        print(dict)
