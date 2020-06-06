@@ -1,5 +1,4 @@
-0,a,b,c
-1,Recording Location,Acquisition Mode,Recording Equipment,Diagnosis
+Cases,Recording Location,Acquisition Mode,Recording Equipment,Diagnosis
 7,Al,sc,Meditron,URTI
 2,Pr,sc,Meditron,URTI
 7,Ar,sc,Meditron,Healthy
