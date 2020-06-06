@@ -7,7 +7,7 @@ import pandas as pd
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
 from keras.layers import Conv2D, MaxPooling2D, GlobalAveragePooling2D
-data_set = '/Volumes/ArchishmaanHD1/data/raw_data/Respiratory_Sound_Database/audio_and_txt_files/'
+data_set = '/home/archi/env/project/raw_data/audio_and_txt_files/'
 num_rows = 40
 num_columns = utils.max_pad_len
 num_channels = 1
@@ -38,7 +38,7 @@ def build_model(x, yy, params, model_path):
 
     model.add(GlobalAveragePooling2D())
 
-    model.add(Dense(3, activation=params['activation_4']))
+    model.add(Dense(2, activation=params['activation_4']))
 
     model.compile(loss='categorical_crossentropy', metrics=['accuracy'], optimizer=params['optimizer'])
 
@@ -65,7 +65,7 @@ def build_model(x, yy, params, model_path):
 def create(params, model_num, x, yy):
     # define the name of the directory to be created
     model_id = "model_" + str(model_num) + '/'
-    model_path = "/Users/Archish/Documents/CodeProjects/Python/ipf-new/models/" + model_id
+    model_path = "/home/archi/env/project/models/" + model_id
     utils.create_dir(path=model_path)
 
     with open(model_path + 'params.csv', 'w') as csv_file:

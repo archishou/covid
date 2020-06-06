@@ -1,7 +1,7 @@
 import os
 import csv
-data_set = '/Volumes/ArchishmaanHD1/data/raw_data/Respiratory_Sound_Database/audio_and_txt_files/'
-csv_path = '/Volumes/ArchishmaanHD1/data/raw_data/Respiratory_Sound_Database/patient_diagnosis.csv'
+data_set = '/home/archi/env/project/raw_data/audio_and_txt_files/'
+csv_path = '/home/archi/env/project/raw_data/patient_diagnosis.csv'
 current_filename = ''
 new_filename = ''
 dict = {}

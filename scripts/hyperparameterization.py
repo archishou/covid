@@ -6,19 +6,18 @@ import pandas as pd
 import numpy as np
 import utils
 import os
-data_set = '/Volumes/ArchishmaanHD1/data/raw_data/Respiratory_Sound_Database/audio_and_txt_files/'
-
+data_set = '/home/archi/env/project/raw_data/audio_and_txt_files/'
 
 param_matrix = {
-    'filter_0':[16, 32],
-    'filter_1':[32],
-    'filter_2':[64],
-    'filter_3':[128],
+    'filter_0':[8, 16],
+    'filter_1':[16, 32],
+    'filter_2':[32, 64],
+    'filter_3':[64, 128],
     'kernel_size_0':[2],
     'kernel_size_1':[2],
     'kernel_size_2':[2],
     'kernel_size_3':[2],
-    'activation_0':['relu'],
+    'activation_0':['relu', 'sigmoid'],
     'activation_1':['relu'],
     'activation_2':['relu'],
     'activation_3':['relu'],
@@ -61,6 +60,7 @@ if __name__ == '__main__':
     vals = list(param_matrix.values())
     parm_combos = list(itertools.product(*vals))
     num_models = len(parm_combos)
+    print(num_models)
     for index in range(num_models):
         dict = {}
         build_vals = list(parm_combos[index])
