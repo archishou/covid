@@ -9,10 +9,10 @@ import os
 data_set = '/home/archi/env/project/raw_data/audio_and_txt_files/'
 
 param_matrix = {
-    'filter_0':[16],
-    'filter_1':[32],
-    'filter_2':[64],
-    'filter_3':[128],
+    'filter_0':[32,
+    'filter_1':[64],
+    'filter_2':[18],
+    'filter_3':[256],
     'kernel_size_0':[2],
     'kernel_size_1':[2],
     'kernel_size_2':[2],
