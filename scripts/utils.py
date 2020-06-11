@@ -19,10 +19,10 @@ def extract_features(audio, sample_rate):
 
 def class_name(file):
     file_str = str(file)
-    if file_str.find("COPD") > 0:
-        return "COPD"
+    if 'Ar' in file or 'Pr' in file:
+        return "RIGHT"
     else:
-        return "NONE"
+        return "LEFT"
 
 def append_features(features, label, *augmented_data):
     for d in augmented_data:

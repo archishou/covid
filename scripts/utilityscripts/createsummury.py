@@ -2,7 +2,7 @@ import csv
 
 data_set_path = '/Users/Archish/Documents/CodeProjects/Python/covid/data-breakdown.csv'
 summury_path = '/Users/Archish/Documents/CodeProjects/Python/covid/sum.csv'
-summury = [[0, "a", "b", "c"]]
+summury = [[0, "a", "b", "c", "d"]]
 
 with open(data_set_path, 'r') as data_set:
     large = [line for line in csv.reader(data_set, delimiter=',')]

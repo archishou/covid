@@ -9,15 +9,15 @@ import os
 data_set = '/home/archi/env/project/raw_data/audio_and_txt_files/'
 
 param_matrix = {
-    'filter_0':[8, 16],
-    'filter_1':[16, 32],
-    'filter_2':[32, 64],
-    'filter_3':[64, 128],
+    'filter_0':[16],
+    'filter_1':[32],
+    'filter_2':[64],
+    'filter_3':[128],
     'kernel_size_0':[2],
     'kernel_size_1':[2],
     'kernel_size_2':[2],
     'kernel_size_3':[2],
-    'activation_0':['relu', 'sigmoid'],
+    'activation_0':['sigmoid'],
     'activation_1':['relu'],
     'activation_2':['relu'],
     'activation_3':['relu'],
@@ -39,7 +39,7 @@ param_matrix = {
 def load_data():
     features = []
     for file in os.listdir(data_set):
-        if file.endswith(".wav"):
+        if file.endswith(".wav") and ("Al" in file or 'Ar' in file or 'Pr' in file or 'Pl' in file) and 'COPD' in file and 'AKGC417L' in file:
             class_label = utils.class_name(file)
             data_file = os.path.join(data_set, file)
             audio, sample_rate = utils.load_audio(data_file)
